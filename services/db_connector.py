@@ -126,7 +126,7 @@ class BotDB:
     
     @reconnect_if_necessary
     def get_fillname_list(self):
-        query = f"SELECT fullname, telegram_id FROM users"
+        query = f"SELECT fullname, telegram_id FROM users WHERE telegram_id IS NOT NULL"
         self.cursor.execute(query)
 
         return self.cursor.fetchall()
@@ -135,7 +135,7 @@ class BotDB:
     def get_user_fullname(self, telegram_id: int):
         query = f"SELECT fullname FROM users WHERE telegram_id = {telegram_id}"
         self.cursor.execute(query)
-        
+
         return self.cursor.fetchall()[0][0]
     
     @reconnect_if_necessary
