@@ -135,12 +135,14 @@ class BotDB:
     def get_user_fullname(self, telegram_id: int):
         query = f"SELECT fullname FROM users WHERE telegram_id = {telegram_id}"
         self.cursor.execute(query)
+        
         return self.cursor.fetchall()[0][0]
     
     @reconnect_if_necessary
     def get_username(self, telegram_id: int):
         query = f"SELECT username FROM users WHERE telegram_id = {telegram_id}"
         self.cursor.execute(query)
+
         return self.cursor.fetchall()[0][0]
     
     @reconnect_if_necessary

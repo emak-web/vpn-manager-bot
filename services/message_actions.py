@@ -37,7 +37,7 @@ async def send_or_create_config_file(message, user_id, user_configs, index, capt
                 username,
                 index
             )
-        file = FSInputFile(f'wg_configs/{file_name}')
+        file = FSInputFile(f'{config.conf_dir}/{file_name}')
         result = await message.answer_document(
             file,
             caption=caption,
