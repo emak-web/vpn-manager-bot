@@ -1,0 +1,12 @@
+env/
+
+wg_configs
+
+.env
+
+__pycache__/
+
+.DS_Store
+
+.vscode
+
