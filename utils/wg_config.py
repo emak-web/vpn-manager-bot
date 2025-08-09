@@ -104,7 +104,7 @@ class WireGuardConfig:
     def run_cmd(self, cmd, input=None):
         process = subprocess.run(
             cmd, input = input, encoding = 'utf8',
-            stdout = subprocess.PIPE, stderr = subprocess.STDOUT
+            stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell=True
         )
         return_code = process.returncode
         output = process.stdout
