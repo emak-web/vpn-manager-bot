@@ -36,7 +36,7 @@ class WireGuardConfig:
         with open(self.path, 'w') as file:
             file.writelines(self.lines)
 
-        # self.sync_config()
+        self.sync_config()
 
     def sync_config(self):
         self.run_cmd(self.sync_cmd)
@@ -151,7 +151,7 @@ class WireGuardConfig:
 
     def create_peer(self, name, tg_username=None):
         ip = self.get_next_peer_ip(self.peers)
-        privatekey, publickey = 1, 2#self.generate_key_pair()
+        privatekey, publickey = self.generate_key_pair()
 
         self.peers.append({
             'Name': name,
