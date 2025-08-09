@@ -147,7 +147,7 @@ class WireGuardConfig:
         if peers:
             return str(ipaddress.ip_address(peers[-1]['AllowedIPs'].split('/')[0]) + 1) + '/32'
         
-        return str(list(ipaddress.ip_network(network).hosts())[0]) + '/32'
+        return str(list(ipaddress.ip_network(network).hosts())[0] + 1) + '/32'
 
     def create_peer(self, name, tg_username=None):
         ip = self.get_next_peer_ip(self.peers)

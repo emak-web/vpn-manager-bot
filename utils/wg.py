@@ -32,5 +32,5 @@ class WireGuard:
         return self.run_cmd(self.status_cmd)[1]
     
     def show_connections(self):
-        return self.run_cmd(self.start_cmd)[1]
+        return self.run_cmd(self.show_connections_cmd)[1]
     
