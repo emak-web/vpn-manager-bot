@@ -157,7 +157,7 @@ class WireGuardConfig:
             'Name': name,
             'TGUsername': tg_username,
             'PrivateKey': privatekey, 
-            'Publickey': publickey,
+            'PublicKey': publickey,
             'AllowedIPs': ip
         })
 
