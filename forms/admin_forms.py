@@ -1,42 +1,16 @@
 from aiogram.fsm.state import State, StatesGroup
 
-class Anouncement(StatesGroup):
-    announcement = State()
+
+class CreatePeer(StatesGroup):
+    name = State()
+    tg_username = State()
     confirm = State()
 
 
-class GetConfig(StatesGroup):
-    index = State()
+class GenerateConfig(StatesGroup):
+    name = State()
 
 
-class GetUsersConfig(StatesGroup):
-    user = State()
-    index = State()
-
-
-class CreateNewConfig(StatesGroup):
-    user = State()
-    restart_server = State()
-    send_file = State()
-
-
-class RegenerateConfigs(StatesGroup):
-    confirm = State()
-
-
-class RestartServer(StatesGroup):
-    confirm = State()
-
-
-class RestartWireguard(StatesGroup):
-    confirm = State()
-
-
-class AddUser(StatesGroup):
-    username = State()
-    confirm = State()
-
-
-class RemoveUser(StatesGroup):
-    username = State()
+class DeletePeer(StatesGroup):
+    name = State()
     confirm = State()

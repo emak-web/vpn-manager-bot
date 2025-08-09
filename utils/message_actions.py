@@ -1,11 +1,11 @@
 from aiogram.types import FSInputFile
-from config_reader import config
-from services import config_actions
-from services.db_connector import db
+from config.config import env
+from utils import config_actions
+from utils.db_connector import db
 
 
 async def notify_admins(bot, message):
-    admins = config.admins
+    admins = env.admins
 
     for admin in admins:
         await bot.send_message(admin, '🔔 '+message)
@@ -13,7 +13,7 @@ async def notify_admins(bot, message):
 
 async def notify_users(bot, message):
     users = db.get_user_id_list()
-    admins = config.admins
+    admins = env.admins
 
     for user in users:
         if user not in admins:
@@ -37,7 +37,7 @@ async def send_or_create_config_file(message, user_id, user_configs, index, capt
                 username,
                 index
             )
-        file = FSInputFile(f'{config.conf_dir}/{file_name}')
+        file = FSInputFile(f'{env.conf_dir}/{file_name}')
         result = await message.answer_document(
             file,
             caption=caption,

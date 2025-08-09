@@ -1,0 +1,13 @@
+{
+    "ip": "0.0.0.0",
+    "dns": "8.8.8.8",
+    "wg_config_path": "wg0.conf",
+    "wg_start_cmd": "systemctl start wg-quick@wg0",
+    "wg_stop_cmd": "systemctl stop wg-quick@wg0",
+    "wg_restart_cmd": "systemctl restart wg-quick@wg0",
+    "wg_status_cmd": "systemctl status wg-quick@wg0",
+    "wg_show_connections_cmd": "wg show wg0",
+    "wg_gen_privatekey_cmd": "wg genkey",
+    "wg_gen_publickey_cmd": "wg pubkey",
+    "wg_sync_cmd": "wg syncconf"
+}

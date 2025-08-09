@@ -1,6 +1,6 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
-from services.db_connector import db
+from utils.db_connector import db
 
 
 class IsAuthorizedUserFilter(BaseFilter):
