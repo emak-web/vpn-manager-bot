@@ -6,7 +6,7 @@ class AdminCommands:
     # /start
     MAIN_MENU: str = '🏠 Main Menu'
     MANAGE_PEERS: str = '👥 Manage Peers'
-    MANAGE_WG: str = '🛠 Manage WG'
+    MANAGE_WG: str = '🛠 Manage WireGuard'
 
     # Manage peers
     CREATE_PEER: str = '👤 Create peer'

@@ -1,5 +1,7 @@
 env/
 
+venv/
+
 wg_configs
 
 .env
