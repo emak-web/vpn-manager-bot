@@ -20,17 +20,17 @@ class WireGuard:
         return return_code, output
 
     def start(self):
-        self.run_cmd(self.start_cmd)
+        return self.run_cmd(self.start_cmd)[0]
     
     def stop(self):
-        self.run_cmd(self.stop_cmd)
+        return self.run_cmd(self.stop_cmd)[0]
     
     def restart(self):
-        self.run_cmd(self.restart_cmd)
+        return self.run_cmd(self.restart_cmd)[0]
     
     def status(self):
-        return self.run_cmd(self.status_cmd)[1]
+        return self.run_cmd(self.status_cmd)
     
     def show_connections(self):
-        return self.run_cmd(self.show_connections_cmd)[1]
+        return self.run_cmd(self.show_connections_cmd)
     

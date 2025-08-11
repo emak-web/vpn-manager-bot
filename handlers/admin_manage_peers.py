@@ -37,10 +37,13 @@ async def create_peer(message: Message, state: FSMContext):
 
 @router.message(CreatePeer.name)
 async def create_peer_name(message: Message, state: FSMContext):
-    # check if exists 
-    await state.update_data(name=message.text)
-    await state.set_state(CreatePeer.tg_username)
-    await message.answer(AdminMessages.CREATE_PEER_TG_USERNAME)
+    wg = WireGuardConfig()
+    if not wg.name_exists(message.text):
+        await state.update_data(name=message.text)
+        await state.set_state(CreatePeer.tg_username)
+        await message.answer(AdminMessages.CREATE_PEER_TG_USERNAME)
+    else:
+        await message.answer(AdminMessages.NAME_ALREADY_EXISTS)
 
 
 @router.message(CreatePeer.tg_username)
@@ -74,11 +77,17 @@ async def create_peer_confirm(message: Message, state: FSMContext):
 @router.message(F.text == AdminCommands.GENERATE_CONFIG)
 async def generate_config(message: Message, state: FSMContext):
     wg = WireGuardConfig()
-    await state.set_state(GenerateConfig.name)
-    await message.answer(
-        AdminMessages.CHOSE_PEER,
-        reply_markup=admin_menu.get_choose_peer_inline_keyboard(wg.get_peers())
-    )
+    if wg.peers:
+        await state.set_state(GenerateConfig.name)
+        await message.answer(
+            AdminMessages.CHOOSE_PEER,
+            reply_markup=admin_menu.get_choose_peer_inline_keyboard(wg.get_peers())
+        )
+    else:
+        await message.answer(
+            AdminMessages.NO_PEERS,
+            reply_markup=admin_menu.get_manage_peers_menu()
+        )
 
 
 @router.callback_query(GenerateConfig.name)
@@ -106,11 +115,17 @@ async def generate_config_name(callback: CallbackQuery, state: FSMContext):
 @router.message(F.text == AdminCommands.DELETE_PEER)
 async def delete_peer(message: Message, state: FSMContext):
     wg = WireGuardConfig()
-    await state.set_state(DeletePeer.name)
-    await message.answer(
-        AdminMessages.CHOSE_PEER,
-        reply_markup=admin_menu.get_choose_peer_inline_keyboard(wg.get_peers())
-    )
+    if wg.peers:
+        await state.set_state(DeletePeer.name)
+        await message.answer(
+            AdminMessages.CHOOSE_PEER,
+            reply_markup=admin_menu.get_choose_peer_inline_keyboard(wg.get_peers())
+        )
+    else:
+        await message.answer(
+            AdminMessages.NO_PEERS,
+            reply_markup=admin_menu.get_manage_peers_menu()
+        )
 
 
 @router.callback_query(DeletePeer.name)
@@ -118,7 +133,6 @@ async def delete_peer_name(callback: CallbackQuery, state: FSMContext):
     await state.update_data(name=callback.data)
     await state.set_state(DeletePeer.confirm)
     await callback.message.delete()
-    # TODO add name
     await callback.message.answer(
         AdminMessages.DELETE_PEER_CONFIRM,
         reply_markup=admin_menu.get_confirm_menu()

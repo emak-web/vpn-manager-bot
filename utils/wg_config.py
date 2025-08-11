@@ -3,6 +3,7 @@ import ipaddress
 from enum import Enum, auto
 
 from config.config import settings
+from messages.admin_messages import AdminMessages
 
 
 class State(Enum):
@@ -79,7 +80,7 @@ class WireGuardConfig:
 
     def generate_interface(self):
         self.lines.append(f'[Interface]\n')
-        self.lines.append(f'#_PublicKey = {self.interface.get("PublicKey", None)}\n')
+        self.lines.append(f'#_PublicKey = {self.interface.get("PublicKey", self.gen_publickey(self.interface.get("PrivateKey", None)))}\n')
         self.lines.append(f'PrivateKey = {self.interface.get("PrivateKey", None)}\n')
         self.lines.append(f'Address = {self.interface.get("Address", None)}\n')
         self.lines.append(f'ListenPort = {self.interface.get("ListenPort", None)}\n')
@@ -111,16 +112,28 @@ class WireGuardConfig:
 
         return return_code, output
 
+    def gen_publickey(self, privatekey):
+        rc, publickey = self.run_cmd(self.gen_publickey_cmd, privatekey.strip())
+        if rc:
+            raise RuntimeError('Failed to generate public key')
+        
+        return publickey.strip()
+
     def generate_key_pair(self):
         rc, privatekey = self.run_cmd(self.gen_privatekey_cmd)
         if rc:
             raise RuntimeError('Failed to generate private key')
         
-        rc, publickey = self.run_cmd(self.gen_publickey_cmd, privatekey)
-        if rc:
-            raise RuntimeError('Failed to generate public key')
+        publickey = self.gen_publickey(privatekey)
 
-        return privatekey, publickey
+        return privatekey.strip(), publickey.strip()
+
+    def name_exists(self, name):
+        for peer in self.peers:
+            if peer['Name'] == name:
+                return True
+        
+        return False
 
     def generate_config(self, interface, peer):
         config = ''
@@ -131,7 +144,7 @@ class WireGuardConfig:
         config += f'DNS = {self.dns}\n'
         config += f'\n'
         config += f'[Peer]\n'
-        config += f'PublicKey = {interface["PublicKey"]}\n'
+        config += f'PublicKey = {interface.get("PublicKey", self.gen_publickey(self.interface.get("PrivateKey", None)))}\n'
         config += f'Endpoint = {self.ip}:{interface["ListenPort"]}\n'
         config += f'AllowedIPs = 0.0.0.0/0\n'
         config += f'PersistentKeepalive = 20\n'
@@ -173,10 +186,13 @@ class WireGuardConfig:
         return [(peer.get('Name', None), peer.get('TGUsername', None)) for peer in self.peers]
 
     def show_peers(self):
-        result = '👥 *Peers List*\n\n'
+        result = AdminMessages.NO_PEERS
 
-        for i, peer in enumerate(self.peers, 1):
-            result += f'{i}. 👤 *{peer.get("Name", None)}* — {peer.get("TGUsername", None)}\n'
+        if self.peers:
+            result = '👥 *Peers List*\n\n'
+
+            for i, peer in enumerate(self.peers, 1):
+                result += f'{i}. 👤 *{peer.get("Name", None)}* — {peer.get("TGUsername", None)}\n'
         
         return result
     

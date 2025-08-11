@@ -9,5 +9,5 @@
     "wg_show_connections_cmd": "wg show",
     "wg_gen_privatekey_cmd": "wg genkey",
     "wg_gen_publickey_cmd": "wg pubkey",
-    "wg_sync_cmd": "wg syncconf"
+    "wg_sync_cmd": "systemctl restart wg-quick@wg0"
 }
